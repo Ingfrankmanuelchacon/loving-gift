@@ -1,14 +1,14 @@
 // Configuración de rutas
 const LIKES_COUNT = 31;
-const HER_COUNT = 9;
+const HER_COUNT = 6;
 const polaroids = [];
 
 // Generar rutas de imágenes
 for (let i = 1; i <= LIKES_COUNT; i++) {
-  polaroids.push(`images/likes/like-${i}.webp`);
+  polaroids.push(`likes/like-${i}.webp`);
 }
 for (let i = 1; i <= HER_COUNT; i++) {
-  polaroids.push(`images/her/pic-${i}.webp`);
+  polaroids.push(`her/pic-${i}.webp`);
 }
 
 // Mezclar array aleatoriamente (Fisher-Yates)
