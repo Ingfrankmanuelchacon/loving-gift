@@ -1,35 +1,42 @@
-// Configuración de rutas
+// 1. Configuración de Cantidades (Ajusta HER_COUNT al número real de fotos que tengas)
 const LIKES_COUNT = 31;
-const HER_COUNT = 6;
-const polaroids = [];
+const HER_COUNT = 6; // Cambia este 666666 al número real de fotos en tu carpeta 'her'
+let currentPhoto = 0;
+let polaroids = [];
 
-// Generar rutas de imágenes
-for (let i = 1; i <= LIKES_COUNT; i++) {
-  polaroids.push(`likes/like-${i}.webp`);
-}
-for (let i = 1; i <= HER_COUNT; i++) {
-  polaroids.push(`her/pic-${i}.webp`);
-}
-
-// Mezclar array aleatoriamente (Fisher-Yates)
-for (let i = polaroids.length - 1; i > 0; i--) {
-  const j = Math.floor(Math.random() * (i + 1));
-  [polaroids[i], polaroids[j]] = [polaroids[j], polaroids[i]];
+// Función para preparar el mazo de fotos en el orden correcto
+function preparePhotos() {
+  polaroids = [];
+  // Primero añadimos lo que le gusta (likes)
+  for (let i = 1; i <= LIKES_COUNT; i++) {
+    polaroids.push(`likes/like-${i}.webp`);
+  }
+  // Luego añadimos las fotos de ella
+  for (let i = 1; i <= HER_COUNT; i++) {
+    polaroids.push(`her/pic-${i}.webp`);
+  }
+  // Nota: Eliminamos el mezclado (Fisher-Yates) para que respete el orden: Likes -> Ella
 }
 
 // Variables de control
-let currentPhoto = 0;
 const stage = document.getElementById("main-stage");
 
 function startMagic() {
+  // Inicializamos el mazo de fotos
+  preparePhotos();
+
   // 1. Ocultar intro
   const intro = document.getElementById("intro-screen");
   intro.style.opacity = "0";
   setTimeout(() => {
     intro.classList.add("hidden");
+
+    // Mostrar el mensaje especial arriba
+    const heading = document.getElementById("gallery-heading");
+    if (heading) heading.classList.add("visible");
   }, 1500);
 
-  // 2. Reproducir Audio (con control de errores por si el navegador bloquea)
+  // 2. Reproducir Audio
   const audio = document.getElementById("bg-music");
   audio.play().catch((e) => console.log("Audio play error:", e));
 
@@ -41,8 +48,8 @@ function startMagic() {
 }
 
 function dropNextPolaroid() {
-  // Si ya tiramos unas 20 fotos o se acabaron, mostramos el final
-  if (currentPhoto >= 20 || currentPhoto >= polaroids.length) {
+  // Si ya se mostraron todas las fotos del array
+  if (currentPhoto >= polaroids.length) {
     setTimeout(showFinale, 3000);
     return;
   }
@@ -56,32 +63,49 @@ function dropNextPolaroid() {
   imgBox.appendChild(img);
 
   // Posición y rotación aleatoria
-  const randomLeft = Math.floor(Math.random() * 70) + 10; // Entre 10% y 80% de la pantalla
-  const randomTop = Math.floor(Math.random() * 60) + 10; // Entre 10% y 70%
-  const randomRotation = Math.floor(Math.random() * 40) - 20; // Entre -20deg y 20deg
+  const randomLeft = Math.floor(Math.random() * 60) + 15; // Centrado en móviles
+  const randomTop = Math.floor(Math.random() * 50) + 15;
+  const randomRotation = Math.floor(Math.random() * 40) - 20;
 
   imgBox.style.left = `${randomLeft}vw`;
   imgBox.style.top = `${randomTop}vh`;
-  // Pasamos la rotación a una variable CSS para la animación
   imgBox.style.setProperty("--rotation", `${randomRotation}deg`);
 
   stage.appendChild(imgBox);
 
   currentPhoto++;
 
-  // Soltar la siguiente foto después de 1.5 a 3 segundos (al azar)
-  const nextDropTime = Math.floor(Math.random() * 1500) + 1500;
-  setTimeout(dropNextPolaroid, nextDropTime);
+  // Tiempo de caída entre fotos (1.2 segundos para que no sea eterno si son muchas)
+  setTimeout(dropNextPolaroid, 1200);
 }
 
 function showFinale() {
   const finale = document.getElementById("finale-screen");
   finale.classList.remove("hidden");
 
-  // Pequeño delay para que aplique la transición de opacidad
   setTimeout(() => {
     finale.classList.add("visible");
   }, 100);
+}
+
+// Lógica para el botón de retorno
+function resetMagic() {
+  // Resetear contador
+  currentPhoto = 0;
+
+  // Limpiar el escenario de fotos
+  // Mantenemos el heading pero borramos las fotos (divs con clase polaroid)
+  stage.innerHTML =
+    '<h2 id="gallery-heading" class="hidden-text">lo que le gusta ¿vió que si le presto atencion, preciosa?</h2>';
+
+  // Ocultar pantallas y mostrar intro de nuevo
+  document.getElementById("finale-screen").classList.remove("visible");
+  setTimeout(() => {
+    document.getElementById("finale-screen").classList.add("hidden");
+    const intro = document.getElementById("intro-screen");
+    intro.classList.remove("hidden");
+    intro.style.opacity = "1";
+  }, 500);
 }
 
 function fireGrimmConfetti() {

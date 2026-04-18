@@ -8,10 +8,10 @@ body {
   background-color: #050505;
   color: #fff;
   font-family: "Georgia", serif;
-  overflow: hidden; /* Evita barras de scroll mientras caen las fotos */
+  overflow: hidden; /* Evita barras de scroll durante la lluvia de fotos */
 }
 
-/* --- Pantalla Inicial --- */
+/* --- Pantalla Inicial (El "Sobre" de la Troupe) --- */
 #intro-screen {
   position: fixed;
   inset: 0;
@@ -46,7 +46,7 @@ body {
 }
 
 .troupe-title {
-  color: #dc2626; /* Rojo oscuro */
+  color: #dc2626; /* Rojo Grimm */
   font-size: 2.5rem;
   margin-bottom: 10px;
 }
@@ -66,11 +66,31 @@ body {
   animation: pulse 2s infinite;
 }
 
-/* --- El Escenario (Polaroids) --- */
+/* --- Escenario de la Galería --- */
 #main-stage {
   position: fixed;
   inset: 0;
   z-index: 10;
+}
+
+/* Texto especial solicitado: "¿vió que si le presto atencion?" */
+#gallery-heading {
+  position: fixed;
+  top: 5%;
+  width: 100%;
+  text-align: center;
+  color: #dc2626;
+  font-style: italic;
+  font-size: 1.4rem;
+  z-index: 5;
+  padding: 0 20px;
+  opacity: 0;
+  transition: opacity 1s ease-in;
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+}
+
+#gallery-heading.visible {
+  opacity: 1;
 }
 
 .polaroid {
@@ -115,8 +135,11 @@ body {
   opacity: 1;
 }
 
-.hidden {
-  display: none !important;
+.finale-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .couple-container {
@@ -153,7 +176,30 @@ body {
   color: #e4e4e7;
   font-style: italic;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+/* Botón de Retorno solicitado */
+.btn-return {
+  background: transparent;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+  padding: 12px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: "Georgia", serif;
+  font-size: 1rem;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.btn-return:hover {
+  background: #dc2626;
+  color: white;
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
 }
 
 .footer-text {
@@ -162,6 +208,11 @@ body {
   letter-spacing: 5px;
   color: #52525b;
   text-transform: uppercase;
+}
+
+/* --- Utilidades --- */
+.hidden {
+  display: none !important;
 }
 
 /* --- Animaciones --- */
@@ -189,5 +240,47 @@ body {
   to {
     opacity: 1;
     transform: translateY(0) rotate(var(--rotation));
+  }
+}
+
+/* --- AJUSTES PARA MÓVIL (QR Ready) --- */
+@media (max-width: 600px) {
+  .intro-box {
+    width: 85%;
+    padding: 2rem 1rem;
+  }
+
+  .troupe-title {
+    font-size: 1.8rem;
+  }
+
+  #gallery-heading {
+    font-size: 1.1rem;
+    top: 2%;
+  }
+
+  .polaroid {
+    width: 150px; /* Un poco más pequeñas para que no saturen la pantalla pequeña */
+  }
+
+  .polaroid img {
+    height: 150px;
+  }
+
+  .photo {
+    width: 130px;
+    height: 180px;
+  }
+
+  .couple-container {
+    gap: 15px;
+  }
+
+  .ampersand {
+    font-size: 2rem;
+  }
+
+  .finale-text {
+    font-size: 1.1rem;
   }
 }
